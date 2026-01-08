@@ -22,7 +22,6 @@ function parseAndSend() {
   }
 
   if (timeText) {
-    console.log("Found time text:", timeText);
     const hoursMatch = timeText.match(/(\d+)時間/);
     const minsMatch = timeText.match(/(\d+)分/);
     

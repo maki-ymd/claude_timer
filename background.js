@@ -31,7 +31,19 @@ function updateBadge() {
 chrome.alarms.create("tick", { periodInMinutes: 1 });
 chrome.alarms.onAlarm.addListener(updateBadge);
 
-// アイコンクリック時にClaudeの消費量ページを開く
+// アイコンクリック時にClaudeの消費量ページを開く（既に開いていれば移動）
 chrome.action.onClicked.addListener(() => {
-  chrome.tabs.create({ url: "https://claude.ai/settings/usage" });
+  const targetUrl = "https://claude.ai/settings/usage";
+  
+  chrome.tabs.query({ url: targetUrl }, (tabs) => {
+    if (tabs.length > 0) {
+      // 既にある場合は最初のひとつをアクティブにする
+      const tab = tabs[0];
+      chrome.tabs.update(tab.id, { active: true });
+      chrome.windows.update(tab.windowId, { focused: true });
+    } else {
+      // ない場合は新しく開く
+      chrome.tabs.create({ url: targetUrl });
+    }
+  });
 });
